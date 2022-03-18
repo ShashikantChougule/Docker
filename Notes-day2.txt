@@ -1,0 +1,217 @@
+ VM -> Virtual Machine
+  
+  Shares the resources from the base machine
+
+     - CPU
+     - RAM
+     - HD
+     - OS (Linux)
+
+
+     Why Docker?
+      - To containerize the applications.
+
+ Devops -> In Devops, Docker is used for deploying and run applications with in containers
+
+Packaging of Applications
+----------------------------------------------------------------------------------------------------------------------
+  Traditional approach -> 
+
+  1.  Java classes  + JRE Libraries class + 3rd party libraries - (war)
+   2. Deploy this war on some external Web server (tomcat, Jetty, Apache Http..)        
+
+   Spring Boot -> 
+    Java Classes + JRE Libraries + 3rd party libraries + Tomcat (Web container)  
+
+
+
+
+
+   
+Relationship of application and infrastructure
+  Infrastructure -  JDK installed, JRE installed based on OS, set the path for Java, 
+
+                                Identify the version - JDK libraries 1.8 /   JRE - 1.8 or above
+                                Tools and external libraries
+                                os libraries. API will have versions
+                                set path of installation
+                                Performance tools
+                                Database software
+                               
+ application - based on OOP approach, add libraries 
+
+Scenario: You have to run the application on client machine?
+                     Port the application,not the infrastructure.
+
+Scenario:  Development Life Cycle (Develop ---- Test ---- Deploy)
+                    Change in the env requires to setup the software tools + libraries + servers
+
+Containerization -  To achieve porability while running in application in different  env.
+
+ - LXC, LXD - Linux OS
+ - Docker - contributing in containers on Linux OS
+
+What is Docker?
+  - It is a open-source platform to ship and run applications within containers.
+  - Docker containers are light-weight . Bcz they donot contain complete OS 
+
+Docker components
+1 . Docker Engine -> Run and manage containers
+2.  Docker Client  -> CLI -> Run the commands on shell and send it to Docker Engine for execution
+3.  Images - are  (templates or blueprint) for running the containers
+4. Containers -> are independent and isolated processes running on OS
+5. Networks -> Every conatiner will get an virtual IP address
+6. Volumes -> Used to store data outside the container on host machine
+
+Today all containers running on Docker Host supports Linux OS libraries
+
+Linux OS flavors:
+-----------------------------------
+1. Ubuntu
+2. Centos
+3. Fedora
+4. Kali Linux
+5. Red Hat
+
+Docker team - Light version of Linux created for docker containers
+
+                       alpine
+                       busybox
+                       buster 
+
+
+Default Library for docker images - https://hub.docker.com/
+
+
+Docker commands:
+
+ # docker pull <<image>>:<<tag>
+
+Every image has one version as latest
+
+version is called as tag 
+
+If tag is missing, then docker engine will pull the image with 'latest' tag 
+
+Every command syntax : docker [options] command
+
+  New syntax: docker [management command] command [options]   
+
+Java application from CMD -  java <<class-name>>
+Spring boot from CMD - java -jar <<jar file>>
+                                     mvn spring-boot:run 
+Python application from CMD - python <<script>>
+
+
+common command 
+-----------------------------------------
+docker <<management command>> inspect <<image/container/network/volume>>
+
+commands for image
+ # docker image // help of commands for image command
+ # docker image ls / docker images // list of all images pull 
+ # docker image history <<image>> 
+ # docker image rm <<image-name/image-id>>
+
+
+
+
+commands for containers
+* To run the new container - # docker container run <<image>> 
+// if no image found on docker host, then pull the image docker hub and run the container 
+
+ * To list the running containers - # docker container ls
+ * applications generate logs and to see them # docker container logs <<container-name/container-id>>
+
+ * To start the stopped container # docker container start <<container-name/container-id>>
+ Note - for console-based applications, container will start, but app will not again
+
+docker container stop <<container-name/container-id>>
+docker container start <<container-name/container-id>>
+docker container restart <<container-name/container-id>> - stop the Web server ruinning inside the container and start it again
+
+Notes: 
+1. Always CMD should be the last command while build images. This command runs application in the container.
+2. Container does not contain console or STDOUT
+3. Every container will have a unique ID and unique name
+4. Every container will have a write layer attached to that container
+5. Every container has its own file system 
+--------------------------------------------------------------------------------------------------------------------------
+To run container in the detached mode
+  
+    docker container run --name web2 -p 3456:80  -d nginx                                        
+
+full name option --detach or -d
+----------------------------------------------------------------------------------------------------------------
+
+To run a command in the  container 
+
+ docker container exec web2 <<command>>
+
+  docker container exec web2 ls -l /usr/share/nginx/html
+        - index.html
+  ---------------------------------------------------------------------------------------------- 
+to view instructions written in nginx image - docker image history nginx
+------------------------------------------------------------------------------------------------
+To get a interactive shell inside the container
+ docker container exec --interactive --tty web2 bash
+  /#  create a directory
+  /# move within the directory and create a file
+  /# exit
+
+Modify a file within the container
+ docker container exec --interactive --tty web2 bash
+  # apt-get update
+  # apt-get install vim
+  # vim /usr/share/nginx/html/index.html
+------------------------------------------------------------------------------------------------------  
+
+Set the inbound rule of VM for other applications to send request to 3457 port
+
+---------------------------------------------------------------------------------------------------------------------------------------
+Create a file on the docker host (linux)  and map it to the nginx server
+
+volumes - are used to persists data in the file separately on the docker host
+              - persist data permanently on the host machine
+              - volumes are completely managed by Docker. 
+              - Volumes can be more safely shared among multiple containers.
+
+
+In addition, volumes are often a better choice than persisting data in a container’s writable layer,
+
+Bind the directory from the host to the container
+
+docker container run --name web2 -p 3457:80 -d -v ~/docker-nginx/html:/usr/share/nginx/html nginx
+
+
+host machine
+cd /
+cd nginx/html
+echo "<h1> Welcome to nginx </h1>" > index.html
+
+
+curl http://localhost:3457
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

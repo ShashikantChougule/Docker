@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  web:
+   image: flask-app:1.0
+   ports:
+     - "3457:5000"
+     - "5000:5000"
+   networks: 
+     - mynetwork
+   
+  redis:
+   image: redis:latest
+   networks: 
+     - mynetwork
+  
+
+
+  network:
+  networks:
+
+    
